@@ -1,0 +1,48 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Simple list of Schularbeiten API
+  description: Liste der Schularbeiten
+schemes:
+  - http
+host: localhost:8080
+basePath: "/Schularbeit.html"
+
+paths:
+  /tests/save:
+    post:
+      description: write down, when test is
+      parameters:
+        - name: Datum
+          in: body
+          description: Datum an dem der test ist.
+          schema:
+            $ref: "#/definitions/Liste"
+      responses:
+        200:
+          description: Successful response
+          schema:
+           $ref: "#/definitions/Liste"
+  /tests:
+    get:
+      description: Returns a JSON with a list of all Datums
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Liste"
+  
+definitions:
+  Liste:
+    type: object
+    required:
+      - date
+      - subject
+    properties:
+      date:
+        type: string
+      subject:
+        type: string
+        

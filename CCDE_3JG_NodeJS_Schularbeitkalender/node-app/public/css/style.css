@@ -1,3 +1,10 @@
 body { 
   background-color: orange;
 }
+
+.container {
+    width: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
