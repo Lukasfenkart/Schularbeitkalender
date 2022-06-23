@@ -1,6 +1,7 @@
 var express = require('express'); // handles requests + responses
 var path = require('path'); // path module provides utilities for working with file and directory paths
 var bodyParser = require('body-parser'); //needed to parse request params
+var MongoClient = require('mongodb').MongoClient;
 
 // create app
 var app = express();
@@ -17,43 +18,50 @@ const PORT = process.env.PORT || 8080;
 app.use(express.static('public'));
 
 //HTTP POST
-app.post('/sayhello', function (req,res){
+app.post('/Sak', function (req,res){
     console.log("body: " + JSON.stringify(req.body));
-    console.log("name1: " + req.body.name1);
+    console.log("Fach1: " + req.body.Fach1);
+    console.log("Datum1: " + req.body.Datum1);
 
     // Prepare output in JSON format
     var response = {
-        name1:req.body.name1,
-        salutation: 'Hallo 3bWI'
+        Fach1:req.body.Fach1,
+        Datum1:req.body.Datum1
     };
 
     res.end(JSON.stringify(response));
 });
 
-app.post('/sayalter', function (req,res){
-    console.log("body: " + JSON.stringify(req.body));
-    console.log("alter1: " + req.body.alter1);
-
-    // Prepare output in JSON format
-    var response = {
-        alter1:req.body.alter1,
-        salutation: 'You are:'
-    };
-
-    res.end(JSON.stringify(response));
+//create database
+var url = "mongodb://mongoadmin:mypasswd@10.115.3.30:8017/SaK";
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  console.log("Database created!");
+  db.close();
 });
 
-app.post('/bmi', function (req,res){
-    console.log("body: " + JSON.stringify(req.body));
-    console.log("height: " + req.body.height);
-    console.log("weight: " + req.body.weight);
+//create collection
+var url = "mongodb://mongoadmin:mypasswd@10.115.3.30:8017/";
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("SaK");
+  dbo.createCollection("Schularbeiten", function(err, res) {
+    if (err) throw err;
+    console.log("Collection created!");
+    db.close();
+  });
+});
 
-
-    var response = {
-    bmi:req.body.weight/(req.body.height/100 * req.body.height/100),
-    };
-
-    res.end(JSON.stringify(response));
+//insert in database
+MongoClient.connect(url, function(err, db, req) {
+  if (err) throw err;
+  var dbo = db.db("SaK");
+  var myobj = { Fach1: req.body.Fach1, Datum1: req.body.Datum1 };
+  dbo.collection("Schularbeiten").insertOne(myobj, function(err, res) {
+    if (err) throw err;
+    console.log("1 document inserted");
+    db.close();
+  });
 });
 
 app.listen(PORT, () => {
