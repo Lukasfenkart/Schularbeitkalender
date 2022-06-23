@@ -53,10 +53,12 @@ MongoClient.connect(url, function(err, db) {
 });
 
 //insert in database
-MongoClient.connect(url, function(err, db, req) {
+MongoClient.connect(url, function(err, db) {
   if (err) throw err;
+  //var Datum1 = $("#Datum1").val();
+  //ar Fach1 = $("#Fach1").val()
   var dbo = db.db("SaK");
-  var myobj = { Fach1: req.body.Fach1, Datum1: req.body.Datum1 };
+  var myobj = { Fach: "hs", Datum: "fetti"};
   dbo.collection("Schularbeiten").insertOne(myobj, function(err, res) {
     if (err) throw err;
     console.log("1 document inserted");
